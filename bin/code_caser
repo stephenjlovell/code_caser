@@ -1,22 +1,22 @@
 #!/usr/bin/env ruby
 require "rubygems"
 require "thor"
-require "code_caser"
+require_relative "../lib/code_caser"
 
-class CodeCaser < Thor
+class CaserCLI < Thor
 
   desc "to_camel", "converts files to camelCase from snake_case."
-  def to_camel(path)
-    # CodeCaser::to_camel(target: path)
-    puts "hello camel"
+  method_option :path, type: :string, required: true
+  def to_camel
+    CodeCaser::to_camel(target: path)
   end
 
   desc "to_snake", "converts file to snake_case from camelCase."
-  def to_snake(path)
-    # CodeCaser::to_snake(target: path)
-    puts "hello snake"
+  method_option :path, type: :string, required: true
+  def to_snake
+    CodeCaser::to_snake(target: path)
   end
 
 end
 
-CodeCaser.start
+CaserCLI.start
