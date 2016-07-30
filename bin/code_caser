@@ -5,16 +5,18 @@ require_relative "../lib/code_caser"
 
 class CaserCLI < Thor
 
-  desc "to_camel", "converts files to camelCase from snake_case."
-  method_option :path, type: :string, required: true
+  desc "to_camel", "converts ALL files in PATH from snake_case to camelCase."
+  option :path, type: :string, required: true
+  option :save, type: :boolean, default: true
   def to_camel
-    CodeCaser::to_camel(target: path)
+    CodeCaser::to_camel(options)
   end
 
-  desc "to_snake", "converts file to snake_case from camelCase."
-  method_option :path, type: :string, required: true
+  desc "to_snake", "converts ALL files in PATH from camelCase to snake_case."
+  option :path, type: :string, required: true
+  option :save, type: :boolean, default: true
   def to_snake
-    CodeCaser::to_snake(target: path)
+    CodeCaser::to_snake(options)
   end
 
 end
