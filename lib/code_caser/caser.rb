@@ -23,7 +23,7 @@ module CodeCaser
     def convert_file(file_path)
       # if the option is set, preserve the original file.
       original = File.join(File.dirname(file_path), File.basename(file_path, ".*") +
-        "_old_#{Time.new.to_i}" + File.extname(file_path))
+        "_#{Time.new.to_i}" + File.extname(file_path))
       FileUtils.cp(file_path, original)
       FileUtils.rm(file_path)
 

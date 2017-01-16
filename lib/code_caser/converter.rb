@@ -1,8 +1,15 @@
 module CodeCaser
   class CamelConverter
     def convert_line(str)
-      # str.gsub(/(.)([A-Z][a-z]+)/,'\1_\2').gsub(/([a-z0-9])([A-Z])/,'\1_\2').downcase
-      str.gsub(/([a-z])([A-Z][a-z]+)/, '\1_\2').gsub(/([a-z])([A-Z][a-z]+)/, '\1_\2').downcase
+      match = false
+      output = str.reverse.gsub(/([a-z]+[A-Z]\B)(.)(?!\w*[A-Z]\b)/) { |s|
+        match = true
+        ($1.to_s + '_' + $2.to_s)
+      }.gsub(/([A-Z])([a-z0-9])(?!\w*[A-Z]\b)/) { |s|
+        match = true
+        ($1.to_s + '_' + $2.to_s)
+      }.reverse
+      match ? output.downcase : output
     end
 
     def description

@@ -26,7 +26,7 @@ Passing a folder will convert all files in that folder (non-recursive):
 
 code_caser will happily convert files in any directory with the required permissions, so **exercise caution when using this option!**
 
-By default, a copies of each original file will be saved in the same directory as the original, with a timestamp in the filename.  You can prevent this via the --save option:
+By default, copies of each original file will be saved in the same directory as the original, with a timestamp in the filename.  You can prevent this via the --save option:
 
     # No backup copies will be created:
     $ code_caser to_camel --path=/path/to/example_folder --save=false

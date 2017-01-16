@@ -11,7 +11,7 @@ describe CodeCaser do
           "IgnoreTitleCase"      => "IgnoreTitleCase",
           "IGNORE_CONSTANT_CASE" => "IGNORE_CONSTANT_CASE",
           "camelCase += 1"       => "camel_case += 1",
-          "HTTPIsAnAcronym"      => "http_is_an_acronym",
+          "HTTPIsAnAcronym"      => "HTTPIsAnAcronym",
           "getHTTPResponse"      => "get_http_response",
           "_camelCase_"          => "_camel_case_",
           "__camelCase__"        => "__camel_case__"
@@ -28,7 +28,7 @@ describe CodeCaser do
       let(:conv) { CodeCaser::SnakeConverter.new }
       it "should safely convert snake_case identifiers to camelCase" do
         {
-          # "IgnoreTitleCase"                 => "IgnoreTitleCase",
+          "IgnoreTitleCase"                 => "IgnoreTitleCase",
           "IGNORE_CONSTANT_CASE"            => "IGNORE_CONSTANT_CASE",
           "snake_case += 1"                 => "snakeCase += 1",
           "alreadyCamelCase"                => "alreadyCamelCase",
