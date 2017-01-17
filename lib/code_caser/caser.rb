@@ -7,33 +7,49 @@ module CodeCaser
       @converter         = opts[:converter]
       @path              = opts[:path]
       @save              = opts[:save] || true
-      @ignore_title_case = opts[:ignore_title_case] || false
+      # @ignore_title_case = opts[:ignore_title_case] || false
     end
 
     def start
-      if File.directory?(@path)
-        Dir[@path + "/*"].each { |f| convert_file(f) if File.file?(f) }
-      elsif File.file?(@path)
-        convert_file(@path)
-      else
-        puts "file or folder location not found: #{@path}"
-      end
+      convert_files(File.directory?(@path) ? @path + "*" : @path)
+    end
+
+    private
+
+    def convert_files(file_path)
+      files = get_files(file_path)
+      return if files.empty? || user_aborted?(files)
+      files.each { |f| convert_file(f) if File.file?(f) }
+    end
+
+    def get_files(file_path)
+      Dir.glob(File.expand_path(file_path))
     end
 
     def convert_file(file_path)
-      # if the option is set, preserve the original file.
-      original = File.join(File.dirname(file_path), File.basename(file_path, ".*") +
-        "_#{Time.new.to_i}" + File.extname(file_path))
-      FileUtils.cp(file_path, original)
+      file_name = File.basename(file_path)
+      puts "-> converting #{file_name}..."
+      # if the save option is set, preserve the original file in a backup folder.
+      backup_folder = File.dirname(file_path) + "_backup_#{Time.new.to_i}"
+      FileUtils.mkdir_p(backup_folder)
+      backup_file_path = File.join(backup_folder, file_name)
+      FileUtils.cp(file_path, backup_file_path)
+      # Replace the file with its converted equivalent.
       FileUtils.rm(file_path)
-
       f = File.new(file_path, "w+")
-      IO.foreach(original) do |line|
+      IO.foreach(backup_file_path) do |line|
         f.puts(@converter.convert_line(line))
       end
 
-      FileUtils.rm(original) unless @save
-      puts "-> #{file_path}"
+      FileUtils.rm_r(backup_folder) unless @save
+    end
+
+    def user_aborted?(files)
+      puts "Warning: This will convert all files listed below from #{@converter.description}:\n"
+      puts files
+      puts "\nMake sure your files are checked in to source control before converting."
+      puts "To confirm, type 'CONVERT':"
+      STDIN.gets.chomp != "CONVERT"
     end
 
   end

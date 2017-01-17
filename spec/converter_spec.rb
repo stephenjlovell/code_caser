@@ -6,6 +6,7 @@ describe CodeCaser do
 
     describe CodeCaser::CamelConverter do
       let(:conv) { CodeCaser::CamelConverter.new }
+      it { should respond_to(:description) }
       it "should safely convert camelCase identifiers to snake_case" do
         {
           "IgnoreTitleCase"      => "IgnoreTitleCase",
@@ -26,6 +27,7 @@ describe CodeCaser do
 
     describe CodeCaser::SnakeConverter do
       let(:conv) { CodeCaser::SnakeConverter.new }
+      it { should respond_to(:description) }
       it "should safely convert snake_case identifiers to camelCase" do
         {
           "IgnoreTitleCase"                 => "IgnoreTitleCase",
