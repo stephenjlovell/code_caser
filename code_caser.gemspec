@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.files                       = %w[Gemfile Rakefile] + Dir.glob("{lib}/**/*")
   s.extra_rdoc_files            = %w[LICENSE README.md CHANGELOG.md]
   s.require_paths               = ["lib"]
-  s.add_dependency              "thor", '~> 0.19.1'
-  s.add_development_dependency  "rspec", '~> 3.4'
+  s.add_dependency              'thor', '~> 0.19.1'
+  s.add_dependency              'colorize', '~> 0.8.1'
+  s.add_development_dependency  'rspec', '~> 3.4'
 end

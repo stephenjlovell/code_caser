@@ -8,6 +8,7 @@ class CaserCLI < Thor
   desc "to_camel", "converts ALL files in PATH from snake_case to camelCase."
   option :path, type: :string, required: true
   option :save, type: :boolean, default: true
+  option :verbose, type: :boolean, default: false
   def to_camel
     CodeCaser::to_camel(options)
   end
@@ -15,6 +16,7 @@ class CaserCLI < Thor
   desc "to_snake", "converts ALL files in PATH from camelCase to snake_case."
   option :path, type: :string, required: true
   option :save, type: :boolean, default: true
+  option :verbose, type: :boolean, default: false
   def to_snake
     CodeCaser::to_snake(options)
   end

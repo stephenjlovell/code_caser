@@ -1,54 +1,74 @@
 require 'fileutils'
+require 'colorize'
 
 module CodeCaser
 
   class Caser
     def initialize(opts = {})
       @converter         = opts[:converter]
-      @path              = opts[:path]
+      @path              = File.directory?(opts[:path]) ? File.join(opts[:path], "*") : opts[:path]
       @save              = opts[:save] || true
-      # @ignore_title_case = opts[:ignore_title_case] || false
+      @verbose           = opts[:verbose] || false
     end
 
     def start
-      convert_files(File.directory?(@path) ? @path + "*" : @path)
+      files = get_files
+      if files.empty?
+        puts "File or folder not found.\n"
+        return
+      elsif user_aborted?(files)
+        puts "File conversion aborted.\n"
+        return
+      end
+      convert_files(files)
+      puts "\n#{files.count} file(s) converted.".colorize(:green)
+      puts "Backup copies of the original files can be found here:".colorize(:green)
+      puts "#{backup_folder}\n"
     end
 
     private
 
-    def convert_files(file_path)
-      files = get_files(file_path)
-      return if files.empty? || user_aborted?(files)
-      files.each { |f| convert_file(f) if File.file?(f) }
+    def get_files
+      Dir.glob(File.expand_path(@path))
     end
 
-    def get_files(file_path)
-      Dir.glob(File.expand_path(file_path))
+    def backup_folder
+      @backup_folder ||= File.dirname(@path) + "_backup_#{Time.new.to_i}"
+    end
+
+    def convert_files(files)
+      # cache the original file in a backup folder.
+      FileUtils.mkdir_p(backup_folder)
+      files.each { |f| convert_file(f) if File.file?(f) }
+      FileUtils.rm_r(backup_folder) unless @save
     end
 
     def convert_file(file_path)
       file_name = File.basename(file_path)
-      puts "-> converting #{file_name}..."
-      # if the save option is set, preserve the original file in a backup folder.
-      backup_folder = File.dirname(file_path) + "_backup_#{Time.new.to_i}"
-      FileUtils.mkdir_p(backup_folder)
+      puts "-> Converting #{file_name}...".colorize(:blue) if @verbose
       backup_file_path = File.join(backup_folder, file_name)
       FileUtils.cp(file_path, backup_file_path)
       # Replace the file with its converted equivalent.
       FileUtils.rm(file_path)
       f = File.new(file_path, "w+")
       IO.foreach(backup_file_path) do |line|
-        f.puts(@converter.convert_line(line))
+        f.puts(convert_line(line))
       end
+    end
 
-      FileUtils.rm_r(backup_folder) unless @save
+    def convert_line(line)
+      if (converted_line = @converter.convert_line(line)) != line && @verbose
+        puts "   " + line.strip
+        puts "   " + converted_line.strip.colorize(:green)
+      end
+      converted_line
     end
 
     def user_aborted?(files)
-      puts "Warning: This will convert all files listed below from #{@converter.description}:\n"
+      puts "Warning: This will convert all files listed below from #{@converter.description}:\n".colorize(:yellow)
       puts files
-      puts "\nMake sure your files are checked in to source control before converting."
-      puts "To confirm, type 'CONVERT':"
+      puts ("\nMake sure your files are checked in to source control before converting." +
+            "\nTo confirm, type 'CONVERT':").colorize(:yellow)
       STDIN.gets.chomp != "CONVERT"
     end
 
