@@ -13,8 +13,8 @@ $ gem install code_caser
 $ code_caser
 Commands:
   code_caser help [COMMAND]        # Describe available commands or one specific command
-  code_caser to_camel --path=PATH  # converts ALL files in PATH from snake_case to camelCase.
-  code_caser to_snake --path=PATH  # converts ALL files in PATH from camelCase to snake_case.
+  code_caser to_camel --path=PATH  # converts files in PATH from snake_case to camelCase.
+  code_caser to_snake --path=PATH  # converts files in PATH from camelCase to snake_case.
 ```
 To use, pass in the path to the file or folder:
 ```
@@ -24,7 +24,7 @@ Passing a folder will convert all files in that folder (non-recursive):
 ```
 $ code_caser to_camel --path=/path/to/example_folder
 ```
-code_caser will happily convert files in any directory with the required permissions, so **exercise caution when passing in a directory!**. You will be presented a confirmation dialog before any files are converted.
+code_caser will happily convert files in any directory with the required permissions, so **exercise caution when passing in a directory!** You will be presented a confirmation dialog before any files are converted.
 
 You may also pass in a globbed directory to convert only files that match a given pattern:
 ```
