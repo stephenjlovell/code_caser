@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.executables                 = Dir.glob("bin/*").map { |f| File.basename(f) }
   s.extra_rdoc_files            = %w[LICENSE README.md CHANGELOG.md]
   s.require_paths               = ["lib"]
+  s.required_ruby_version       = '>= 1.9.3'
   s.add_dependency              'thor', '~> 0.19.1'
   s.add_dependency              'colorize', '~> 0.8.1'
   s.add_development_dependency  'rspec', '~> 3.4'

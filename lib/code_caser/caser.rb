@@ -22,8 +22,10 @@ module CodeCaser
       end
       convert_files(files)
       puts "\n#{files.count} file(s) converted.".colorize(:green)
-      puts "Backup copies of the original files can be found here:".colorize(:green)
-      puts "#{backup_folder}\n"
+      if @save
+        puts "Backup copies of the original files can be found here:".colorize(:green)
+        puts "#{backup_folder}\n"
+      end
     end
 
     private
