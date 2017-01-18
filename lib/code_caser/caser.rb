@@ -65,7 +65,8 @@ module CodeCaser
     end
 
     def user_aborted?(files)
-      puts "Warning: This will convert all files listed below from #{@converter.description}:\n".colorize(:yellow)
+      puts "Warning: This will convert all files listed below from #{@converter.description}.\n".colorize(:yellow)
+      puts "No back-ups of these files will be created.\n".colorize(:yellow) unless @save
       puts files
       puts ("\nMake sure your files are checked in to source control before converting." +
             "\nTo confirm, type 'CONVERT':").colorize(:yellow)
