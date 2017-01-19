@@ -5,10 +5,10 @@ module CodeCaser
 
   class Caser
     def initialize(opts = {})
-      @converter         = opts[:converter]
-      @path              = File.directory?(opts[:path]) ? File.join(opts[:path], "*") : opts[:path]
-      @save              = opts[:save] || true
-      @verbose           = opts[:verbose] || false
+      @converter  = opts[:converter]
+      @path       = File.directory?(opts[:path]) ? File.join(opts[:path], "*") : opts[:path]
+      @save       = opts[:save] || true
+      @verbose    = opts[:verbose] || false
     end
 
     def start
@@ -58,11 +58,7 @@ module CodeCaser
     end
 
     def convert_line(line)
-      if (converted_line = @converter.convert_line(line)) != line && @verbose
-        puts "   " + line.strip
-        puts "   " + converted_line.strip.colorize(:green)
-      end
-      converted_line
+      @converter.convert_line(line, @verbose)
     end
 
     def user_aborted?(files)

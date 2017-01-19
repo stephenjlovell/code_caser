@@ -5,7 +5,7 @@ describe CodeCaser do
   describe "Converters" do
 
     describe CodeCaser::CamelConverter do
-      let(:conv) { CodeCaser::CamelConverter.new }
+      let(:conv) { CodeCaser::CamelConverter.new() }
       it { should respond_to(:description) }
       it "should safely convert camelCase identifiers to snake_case" do
         {
@@ -20,9 +20,19 @@ describe CodeCaser do
           expect(conv.convert_line(camel)).to eq(snake)
         end
       end
-      # context "when ignore_title_case option is set" do
-      #
-      # end
+      
+      context "when ignore_after option is set" do
+        let(:conv_ignore) { CodeCaser::CamelConverter.new(ignore_after: '//') }
+        it "ignores any text after the ignore_after identifier" do
+          {
+            '// this camelCase comment should be ignored' => '// this camelCase comment should be ignored',
+            'thisText willBeConverted' => 'this_text will_be_converted',
+            'soWillThis // but notThisComment' => 'so_will_this // but notThisComment'
+          }.each do |camel, snake|
+            expect(conv_ignore.convert_line(camel)).to eq(snake)
+          end
+        end
+      end
     end
 
     describe CodeCaser::SnakeConverter do
@@ -41,9 +51,19 @@ describe CodeCaser do
         end
       end
 
-      # context "when ignore_title_case option is set" do
-      #
-      # end
+      context "when ignore_after option is set" do
+        let(:conv_ignore) { CodeCaser::SnakeConverter.new(ignore_after: '//') }
+        it "ignores any text after the ignore_after identifier" do
+          {
+            '// this snake_case comment should be ignored' => '// this snake_case comment should be ignored',
+            'this_text will_be_converted' => 'thisText willBeConverted',
+            'so_will_this // but not_this_comment' => 'soWillThis // but not_this_comment'
+          }.each do |snake, camel|
+            expect(conv_ignore.convert_line(snake)).to eq(camel)
+          end
+        end
+      end
+
     end
 
   end

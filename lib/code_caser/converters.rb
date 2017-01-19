@@ -1,6 +1,31 @@
+require 'colorize'
+
 module CodeCaser
-  class CamelConverter
-    def convert_line(str)
+  class Converter
+    def initialize(opts={})
+      @ignore_after = Regexp.escape(opts[:ignore_after]) if opts[:ignore_after]
+    end
+
+    def convert_line(line, verbose=false)
+      converted_line = if @ignore_after && (match_data = line.match(Regexp.new('^(.*)(' + @ignore_after + '.*)')))
+        convert_string(match_data[1]) + match_data[2]
+      else
+        convert_string(line)
+      end
+      if verbose && converted_line != line
+        puts "   " + line.strip
+        puts "   " + converted_line.strip.colorize(:green)
+      end
+      converted_line
+    end
+
+    def convert_string # concrete Converter implementations must supply this method
+      raise NotImplementedError
+    end
+  end
+
+  class CamelConverter < Converter
+    def convert_string(str)
       match = false
       output = str.reverse.gsub(/([a-z]+[A-Z]\B)(.)(?!\w*[A-Z]\b)/) { |s|
         match = true
@@ -17,8 +42,8 @@ module CodeCaser
     end
   end
 
-  class SnakeConverter
-    def convert_line(str)
+  class SnakeConverter < Converter
+    def convert_string(str)
       str.gsub(/([a-z0-9])_([a-z0-9])/) { |s| $1 + $2.upcase }
     end
 
