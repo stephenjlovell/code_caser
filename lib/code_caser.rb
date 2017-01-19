@@ -1,5 +1,4 @@
-
-Dir["./lib/code_caser/*.rb"].each {|file| require file }
+Dir[File.dirname(__FILE__) + '/code_caser/*.rb'].each {|file| require file }
 
 module CodeCaser
   def self.to_camel(opts)

@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.version                     = "#{CodeCaser::VERSION}"
   s.date                        = Time.now.strftime('%Y-%m-%d')
   s.summary                     = "Convert files from snake_case to camelCase and vice versa."
-  s.description                 = "A simple utility gem to convert files from snake_case to camelCase and back."
+  s.description                 = "A simple utility gem to convert files from snake_case to camelCase and and vice versa."
   s.homepage                    = "https://github.com/stephenjlovell/code_caser"
   s.email                       = [ "sjlovell34@gmail.com" ]
   s.authors                     = [ "Steve Lovell" ]

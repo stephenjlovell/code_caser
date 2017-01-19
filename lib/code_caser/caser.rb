@@ -39,8 +39,7 @@ module CodeCaser
     end
 
     def convert_files(files)
-      # cache the original file in a backup folder.
-      FileUtils.mkdir_p(backup_folder)
+      FileUtils.mkdir_p(backup_folder) # Original files will be cached to this backup folder.
       files.each { |f| convert_file(f) if File.file?(f) }
       FileUtils.rm_r(backup_folder) unless @save
     end

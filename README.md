@@ -18,17 +18,17 @@ Commands:
 ```
 To use, pass in the path to the file or folder:
 ```
-$ code_caser to_camel --path=/path/to/example_file.js
+$ code_caser to_camel --path=/folder/subfolder/example_file.js
 ```
 Passing a folder will convert all files in that folder (non-recursive):
 ```
-$ code_caser to_camel --path=/path/to/example_folder
+$ code_caser to_camel --path=/folder/subfolder
 ```
 code_caser will happily convert files in any directory with the required permissions, so **exercise caution when passing in a directory!** You will be presented a confirmation dialog before any files are converted.
 
 You may also pass in a globbed directory to convert only files that match a given pattern:
 ```
-$ code_caser to_camel --path/to/example_folder/*.js
+$ code_caser to_camel --path=/folder/subfolder/*.js
 ```
 ## Options
 Use the ```--verbose``` flag to print any changes made to each file to the terminal.
