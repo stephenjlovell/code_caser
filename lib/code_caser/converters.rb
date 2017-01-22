@@ -7,8 +7,8 @@ module CodeCaser
     end
 
     def convert_line(line, verbose=false)
-      converted_line = if @ignore_after && (match_data = line.match(Regexp.new('^(.*)(' + @ignore_after + '.*)')))
-        convert_string(match_data[1]) + match_data[2]
+      converted_line = if @ignore_after && (data = match_data(line))
+        convert_string(data[1]) + data[2]
       else
         convert_string(line)
       end
@@ -17,6 +17,14 @@ module CodeCaser
         puts "   " + converted_line.strip.colorize(:green)
       end
       converted_line
+    end
+
+    def match_data(line)
+      line.match(Regexp.new('^(.*)(' + @ignore_after + '.*)'))
+    end
+
+    def split(line)
+      (data = match_data(line)) ? [data[1], data[2]] : [line, ""]
     end
 
     def convert_string # concrete Converter implementations must supply this method

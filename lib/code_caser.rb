@@ -1,3 +1,4 @@
+
 Dir[File.dirname(__FILE__) + '/code_caser/*.rb'].each {|file| require file }
 
 module CodeCaser
