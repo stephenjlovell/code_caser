@@ -5,10 +5,10 @@ module CodeCaser
 
   class Caser
     def initialize(opts = {})
-      @converter  = opts[:converter]
-      @path       = File.directory?(opts[:path]) ? File.join(opts[:path], "*") : opts[:path]
-      @save       = opts[:save] || true
-      @verbose    = opts[:verbose] || false
+      @converter  = opts.fetch(:converter)
+      @path       = File.directory?(opts.fetch(:path)) ? File.join(opts.fetch(:path), "*") : opts.fetch(:path)
+      @save       = opts.fetch(:save, true)
+      @verbose    = opts.fetch(:verbose, false)
     end
 
     def start
