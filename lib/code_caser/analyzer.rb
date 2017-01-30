@@ -4,43 +4,64 @@ module CodeCaser
   # overlap with existing identifiers.
   class Analyzer
     def initialize(opts)
-      @converter               = opts[:converter]
-      @files                   = opts[:files] || []
+      @converter               = opts.fetch(:converter)
+      @files                   = PathConverter.new(opts.fetch(:path)).get_files
+      @verbose                 = opts.fetch(:verbose, false)
       @existing_identifiers    = {}
       @new_identifiers         = {}
       @overlapping_identifiers = []
     end
 
     def analyze
+      load_existing_identifiers
       @files.each { |f| analyze_file(f) if File.file?(f) }
-      @new_identifiers.each { |id,v| @overlapping_identifiers << id if @existing_identifiers.has_key(id) }
+      # puts @existing_identifiers.inspect
+      puts @new_identifiers.inspect
+      @overlapping_identifiers = @new_identifiers.select {|k,v| @existing_identifiers.key?(k) }.keys
+      print_overlap
+    end
+
+    def load_existing_identifiers
+      @files.each { |f| load_existing_identifiers_from_file(f) if File.file?(f) }
+    end
+
+    def load_existing_identifiers_from_file(file_path)
+      puts "loading file: #{file_path}" if @verbose
+      IO.foreach(file_path) { |line| load_existing_identifiers_from_line(line) }
+    end
+
+    def load_existing_identifiers_from_line(line)
+      split_line(line).each { |l| @existing_identifiers[l] = true }
+    end
+
+    def analyze_file(file_path)
+      puts "loading file: #{file_path}" if @verbose
+      IO.foreach(file_path) { |line| analyze_line(line) }
+    end
+
+    def print_overlap
       if @overlapping_identifiers.empty?
         puts "No overlapping identifiers found".colorize(:green)
       else
         puts "The following identifiers would overlap with existing names:".colorize(:yellow)
-        @overlapping_identifiers.each {|i| puts i.colorize(:yellow) }
+        puts @overlapping_identifiers.join(",").colorize(:yellow)
       end
-    end
-
-
-    def analyze_file(file_path)
-      IO.foreach(file_path) { |line| analyze_line(line) }
     end
 
     private
 
     def analyze_line(original_line)
-      store_identifiers(original_line, @existing_identifiers)
-      store_identifiers(@converter.convert_line(original_line), @new_identifiers)
+      # discard anything after the ignore_after identifier
+      original_identifiers = @converter.chop(original_line).split(/\W+/)
+      original_identifiers.each do |identifier|
+        if identifier != (new_identifier = @converter.convert_line(identifier))
+          @new_identifiers[new_identifier] = identifier
+        end
+      end
     end
 
-    def store_identifiers(line, identifiers)
-      parse_identifiers(line).each {|id| identifiers[id] = true }
-    end
-
-    def parse_identifiers(line)
-      line = @converter.split(line)[0] # discard anything after the ignore_after identifier, if any
-      line.split(/\W+/)
+    def split_line(line)
+      @converter.chop(line).split(/\W+/)
     end
 
   end

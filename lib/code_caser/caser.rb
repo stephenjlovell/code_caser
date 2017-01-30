@@ -2,17 +2,16 @@ require 'fileutils'
 require 'colorize'
 
 module CodeCaser
-
   class Caser
     def initialize(opts = {})
-      @converter  = opts.fetch(:converter)
-      @path       = File.directory?(opts.fetch(:path)) ? File.join(opts.fetch(:path), "*") : opts.fetch(:path)
-      @save       = opts.fetch(:save, true)
-      @verbose    = opts.fetch(:verbose, false)
+      @converter      = opts.fetch(:converter)
+      @path_converter = PathConverter.new(opts.fetch(:path))
+      @save           = opts.fetch(:save, true)
+      @verbose        = opts.fetch(:verbose, false)
     end
 
     def start
-      files = get_files
+      files = @path_converter.get_files
       if files.empty?
         puts "File or folder not found.\n"
         return
@@ -30,12 +29,8 @@ module CodeCaser
 
     private
 
-    def get_files
-      Dir.glob(File.expand_path(@path))
-    end
-
     def backup_folder
-      @backup_folder ||= File.dirname(@path) + "_backup_#{Time.new.to_i}"
+      @backup_folder ||= File.dirname(@path_converter.path) + "_backup_#{Time.new.to_i}"
     end
 
     def convert_files(files)

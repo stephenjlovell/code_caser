@@ -23,8 +23,8 @@ module CodeCaser
       line.match(Regexp.new('^(.*)(' + @ignore_after + '.*)'))
     end
 
-    def split(line)
-      (data = match_data(line)) ? [data[1], data[2]] : [line, ""]
+    def chop(line)
+      @ignore_after && (data = match_data(line)) ? data[1] : line
     end
 
     def convert_string # concrete Converter implementations must supply this method
