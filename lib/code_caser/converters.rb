@@ -1,9 +1,12 @@
 require 'colorize'
+# require 'pry'
 
 module CodeCaser
   class Converter
     def initialize(opts={})
-      @ignore_after = Regexp.escape(opts[:ignore_after]) if opts[:ignore_after]
+      if opts[:ignore_after]
+        @ignore_after = Regexp.new('(^.*?)(' + Regexp.escape(opts[:ignore_after]) + '.*)')
+      end
     end
 
     def convert_line(line, verbose=false)
@@ -13,14 +16,11 @@ module CodeCaser
         convert_string(line)
       end
       if verbose && converted_line != line
-        puts "   " + line.strip
+        puts "\n   " + line.strip
         puts "   " + converted_line.strip.colorize(:green)
       end
+      # binding.pry
       converted_line
-    end
-
-    def match_data(line)
-      line.match(Regexp.new('^(.*)(' + @ignore_after + '.*)'))
     end
 
     def chop(line)
@@ -29,6 +29,12 @@ module CodeCaser
 
     def convert_string # concrete Converter implementations must supply this method
       raise NotImplementedError
+    end
+
+    private
+
+    def match_data(line)
+      line.match(@ignore_after)
     end
   end
 

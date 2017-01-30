@@ -48,7 +48,7 @@ module CodeCaser
       FileUtils.rm(file_path)
       f = File.new(file_path, "w+")
       IO.foreach(backup_file_path) do |line|
-        f.puts(convert_line(line))
+        f.puts(convert_line(line.chomp))
       end
     end
 
