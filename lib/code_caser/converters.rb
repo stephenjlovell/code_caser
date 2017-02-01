@@ -1,5 +1,4 @@
 require 'colorize'
-# require 'pry'
 
 module CodeCaser
   class Converter
@@ -19,7 +18,7 @@ module CodeCaser
         puts "\n   " + line.strip
         puts "   " + converted_line.strip.colorize(:green)
       end
-      # binding.pry
+
       converted_line
     end
 

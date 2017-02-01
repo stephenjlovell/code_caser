@@ -30,7 +30,7 @@ module CodeCaser
     private
 
     def backup_folder
-      @backup_folder ||= File.dirname(@path_converter.path) + "_backup_#{Time.new.to_i}"
+      @backup_folder ||= @path_converter.join("_backup_#{Time.new.to_i}")
     end
 
     def convert_files(files)

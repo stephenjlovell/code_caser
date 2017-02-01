@@ -1,9 +1,7 @@
 # CodeCaser
-
 A simple Ruby command line utility that converts files from camelCase to snake_case and vice-versa.
 
 ## Installation
-
 To install:
 ```
 $ gem install code_caser
@@ -34,3 +32,6 @@ $ code_caser to_camel --path=/folder/subfolder/*.js
 Use the ```--verbose``` flag to print any changes made to each file to the terminal.
 
 By default, backup copies of each file converted will be saved to a timestamped backup folder in the ```--path``` directory. You can prevent backups from being created by passing in the ```--no-save``` flag.
+
+## License
+code_caser is available under the MIT License.

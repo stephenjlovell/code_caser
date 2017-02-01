@@ -1,9 +1,16 @@
 module CodeCaser
   class PathConverter
-    attr_reader :path
 
     def initialize(path)
       @path = File.directory?(path) ? File.join(path, "*") : path
+    end
+
+    def dirname
+      File.expand_path(File.dirname(@path))
+    end
+
+    def join(name)
+      File.join(dirname + name)
     end
 
     def get_files
