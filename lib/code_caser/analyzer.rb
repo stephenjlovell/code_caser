@@ -15,7 +15,6 @@ module CodeCaser
     def analyze
       load_existing_identifiers
       @files.each { |f| analyze_file(f) if File.file?(f) }
-      puts @existing_identifiers.keys.sort.inspect
       print_new_identifiers if @verbose
       @overlapping_identifiers = @new_identifiers.select {|k,v| @existing_identifiers.key?(k) }.keys
       print_overlap
