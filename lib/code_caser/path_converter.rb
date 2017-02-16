@@ -1,8 +1,7 @@
 module CodeCaser
   class PathConverter
-
     def initialize(path)
-      @path = File.directory?(path) ? File.join(path, "*") : path
+      @path = File.directory?(path) ? File.join(path, '*') : path
     end
 
     def dirname
@@ -13,8 +12,8 @@ module CodeCaser
       File.join(dirname + name)
     end
 
-    def get_files
-      Dir.glob(File.expand_path(@path))
+    def files
+      @files ||= Dir.glob(File.expand_path(@path))
     end
   end
 end

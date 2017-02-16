@@ -1,5 +1,4 @@
 module CodeCaser
-
   # This class scans the provided files to determine if any converted identifiers
   # overlap with existing identifiers.
   class Analyzer
@@ -16,7 +15,7 @@ module CodeCaser
       load_existing_identifiers
       @files.each { |f| analyze_file(f) if File.file?(f) }
       print_new_identifiers if @verbose
-      @overlapping_identifiers = @new_identifiers.select {|k,v| @existing_identifiers.key?(k) }.keys
+      @overlapping_identifiers = @new_identifiers.select { |k, _v| @existing_identifiers.key?(k) }.keys
       print_overlap
     end
 
@@ -43,13 +42,13 @@ module CodeCaser
         puts "\nNo overlapping identifiers found.".colorize(:green)
       else
         puts "\nThe following identifiers would overlap with existing names:".colorize(:yellow)
-        puts @overlapping_identifiers.join(",").colorize(:yellow)
+        puts @overlapping_identifiers.join(',').colorize(:yellow)
       end
     end
 
     def print_new_identifiers
       puts "\nThe following identifiers would be replaced:".colorize(:yellow)
-      @new_identifiers.sort.to_h.each {|k,v| puts "#{v} -> #{k.colorize(:green)}" }
+      @new_identifiers.sort.to_h.each { |k, v| puts "#{v} -> #{k.colorize(:green)}" }
     end
 
     private
@@ -67,7 +66,5 @@ module CodeCaser
     def split_line(line)
       @converter.chop(line).split(/\W+/)
     end
-
   end
-
 end

@@ -13,11 +13,13 @@ describe CodeCaser do
     #   f
     # end
 
-    let(:caser) { CodeCaser::Caser.new(save: false, path: file.path,
-        converter: CodeCaser::SnakeConverter.new, ignore_after: '//') }
+    let(:caser) do
+      CodeCaser::Caser.new(save: false,
+                           path: file.path,
+                           converter: CodeCaser::SnakeConverter.new,
+                           ignore_after: '//')
+    end
 
-        # expect(file.read).to eq()
-
-
+    # expect(file.read).to eq()
   end
 end

@@ -1,1 +1,1 @@
-require "./lib/code_caser.rb"
+require './lib/code_caser.rb'

@@ -21,10 +21,9 @@ module CodeCaser
       end
       convert_files(files)
       puts "\n#{files.count} file(s) converted.".colorize(:green)
-      if @save
-        puts "Backup copies of the original files can be found here:".colorize(:green)
-        puts "#{backup_folder}\n"
-      end
+      return unless @save
+      puts 'Backup copies of the original files can be found here:'.colorize(:green)
+      puts "#{backup_folder}\n"
     end
 
     private
@@ -46,7 +45,7 @@ module CodeCaser
       FileUtils.cp(file_path, backup_file_path)
       # Replace the file with its converted equivalent.
       FileUtils.rm(file_path)
-      f = File.new(file_path, "w+")
+      f = File.new(file_path, 'w+')
       IO.foreach(backup_file_path) do |line|
         f.puts(convert_line(line.chomp))
       end
@@ -60,11 +59,9 @@ module CodeCaser
       puts "Warning: This will convert all files listed below from #{@converter.description}.\n".colorize(:yellow)
       puts "No back-ups of these files will be created.\n".colorize(:yellow) unless @save
       puts files
-      puts ("\nMake sure your files are checked in to source control before converting." +
-            "\nTo confirm, type 'CONVERT':").colorize(:yellow)
-      STDIN.gets.chomp != "CONVERT"
+      puts "\nMake sure your files are checked in to source control before converting." \
+            "\nTo confirm, type 'CONVERT':".colorize(:yellow)
+      STDIN.gets.chomp != 'CONVERT'
     end
-
   end
-
 end
