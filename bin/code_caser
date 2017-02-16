@@ -38,12 +38,12 @@ module CodeCaser
     include FileArgs
     annotate 'to_camel', 'converts files in PATH from snake_case to camelCase'
     def to_camel
-      CodeCaser.to_camel(options)
+      CodeCaser::FileConversion.to_camel(options)
     end
 
     annotate 'to_snake', 'converts files in PATH from camelCase to snake_case'
     def to_snake
-      CodeCaser.to_snake(options)
+      CodeCaser::FileConversion.to_snake(options)
     end
 
     # TODO: add methods to convert a single string
