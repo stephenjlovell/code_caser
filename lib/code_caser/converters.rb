@@ -1,6 +1,7 @@
 require 'colorize'
 
 module CodeCaser
+  # abstract base class for line converters
   class Converter
     def initialize(opts = {})
       if opts[:ignore_after]
@@ -8,30 +9,37 @@ module CodeCaser
       end
     end
 
-    def convert_line(line, verbose = false)
-      converted_line = if @ignore_after && (data = match_data(line))
-                         convert_string(data[1]) + data[2]
-                       else
-                         convert_string(line)
-      end
-      if verbose && converted_line != line
-        puts "\n   " + line.strip
-        puts '   ' + converted_line.strip.colorize(:green)
-      end
+    def convert_and_print_line(line)
+      converted_line = convert_line(line)
+      print_output(line, converted_line)
+    end
 
+    def convert_line(line, verbose = false)
+      converted_line =
+        if @ignore_after && (data = match_data(line))
+          convert_string(data[1]) + data[2]
+        else
+          convert_string(line)
+        end
+      print_output(line, converted_line) if verbose && converted_line != line
       converted_line
+    end
+
+    def print_output(line, converted_line)
+      puts "\n   " + line.strip
+      puts '   ' + converted_line.strip.colorize(:green)
     end
 
     def chop(line)
       @ignore_after && (data = match_data(line)) ? data[1] : line
     end
 
+    private
+
     # concrete Converter implementations must supply this method
     def convert_string
       raise NotImplementedError
     end
-
-    private
 
     def match_data(line)
       line.match(@ignore_after)

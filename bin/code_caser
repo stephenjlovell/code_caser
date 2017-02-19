@@ -9,14 +9,21 @@ module CodeCaser
       base.extend(ClassMethods)
     end
     module ClassMethods
-      def annotate(method_name, desc, save_option = true)
+      def annotate_file_methods(method_name, description, save_option = true)
         class_eval do # help keep things DRY:
-          desc method_name, desc
+          desc method_name, description
           option :path, type: :string, required: true
           option :ignore_after, type: :string, required: false,
-                                desc: 'ignore all text  in each line after the string IGNORE_AFTER'
+            desc: 'ignore all text in each line after the string IGNORE_AFTER'
           option :verbose, type: :boolean, default: false
           option :save, type: :boolean, default: true if save_option
+        end
+      end
+
+      def annotate_string_methods(method_name, description)
+        class_eval do
+          desc method_name, description
+          option :string, type: :string, required: true
         end
       end
     end
@@ -24,35 +31,58 @@ module CodeCaser
 
   class AnalyzerCLI < Thor
     include FileArgs
-    annotate 'to_camel', 'checks if any existing identifiers would be overridden by converting to camelCase', false
+
+    annotate_file_methods 'to_camel', 'checks if any existing identifiers would be overridden by converting to camelCase', false
     def to_camel
       CodeCaser::Analyze.to_camel(options)
     end
-    annotate 'to_snake', 'checks if any existing identifiers would be overridden by converting to snake_case', false
+
+    annotate_file_methods 'to_snake', 'checks if any existing identifiers would be overridden by converting to snake_case', false
     def to_snake
       CodeCaser::Analyze.to_snake(options)
     end
   end
 
+  class StringConversionCLI < Thor
+    include FileArgs
+
+    annotate_string_methods 'to_camel', 'converts STRING from snake_case to camelCase'
+    def to_camel
+      CodeCaser::StringConversion.to_camel(options)
+    end
+
+    annotate_string_methods 'to_snake', 'converts STRING from camelCase to snake_case'
+    def to_snake
+      CodeCaser::StringConversion.to_snake(options)
+    end
+
+  end
+
+
   class CaserCLI < Thor
     include FileArgs
-    annotate 'to_camel', 'converts files in PATH from snake_case to camelCase'
+
+    annotate_file_methods 'to_camel', 'converts files in PATH from snake_case to camelCase'
     def to_camel
       CodeCaser::FileConversion.to_camel(options)
     end
 
-    annotate 'to_snake', 'converts files in PATH from camelCase to snake_case'
+    annotate_file_methods 'to_snake', 'converts files in PATH from camelCase to snake_case'
     def to_snake
       CodeCaser::FileConversion.to_snake(options)
     end
 
-    # TODO: add methods to convert a single string
+    register CodeCaser::StringConversionCLI, 'string', 'string to_camel',
+      'converts STRING from snake_case to camelCase'
+
+    register CodeCaser::StringConversionCLI, 'string', 'string to_snake',
+      'converts STRING from camelCase to snake_case'
 
     register CodeCaser::AnalyzerCLI, 'analyze', 'analyze to_camel',
-             'checks if any existing identifiers would be overridden by converting to camelCase'
+      'checks if any existing identifiers would be overridden by converting to camelCase'
 
     register CodeCaser::AnalyzerCLI, 'analyze', 'analyze to_snake',
-             'checks if any existing identifiers would be overridden by converting to snake_case'
+      'checks if any existing identifiers would be overridden by converting to snake_case'
 
     desc '--version, -v', 'print the version number'
     def __print_version
